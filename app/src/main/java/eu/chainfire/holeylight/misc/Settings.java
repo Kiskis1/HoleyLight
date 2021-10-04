@@ -827,8 +827,8 @@ public class Settings implements SharedPreferences.OnSharedPreferenceChangeListe
         return false;
     }
 
-    public void setPurchased(String sku) {
-        if (!isPurchased(sku)) {
+    public void setPurchased(ArrayList<String> sku) {
+        if (!isPurchased(String.valueOf(!sku.isEmpty()))) {
             String[] purchased = getPurchased();
             StringBuilder sb = new StringBuilder();
             for (String s : purchased) {

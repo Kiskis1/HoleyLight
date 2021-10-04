@@ -672,7 +672,7 @@ public class MainActivity extends BaseActivity implements Settings.OnSettingsCha
         if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
             if (purchases != null) {
                 for (Purchase purchase : purchases) {
-                    Slog.d("IAP", "purchaseUpdate: %s", purchase.getSku());
+                    //Slog.d("IAP", "purchaseUpdate: %s", purchase.getSku());
                     handlePurchase(purchase);
                 }
             }
@@ -716,7 +716,7 @@ public class MainActivity extends BaseActivity implements Settings.OnSettingsCha
                             List<Purchase> purchases = purchasesResult.getPurchasesList();
                             if (purchases != null) {
                                 for (Purchase purchase : purchases) {
-                                    Slog.d("IAP", "queryPurchases: %s", purchase.getSku());
+                                    //Slog.d("IAP", "queryPurchases: %s", purchase.getSku());
                                     handlePurchase(purchase);
                                 }
                             }
@@ -743,11 +743,11 @@ public class MainActivity extends BaseActivity implements Settings.OnSettingsCha
                         AcknowledgePurchaseParams.newBuilder()
                             .setPurchaseToken(purchase.getPurchaseToken())
                             .build();
-                    Slog.d("IAP", "acknowledging: %s", purchase.getSku());
-                    final String sku = purchase.getSku();
+                    Slog.d("IAP", "acknowledging: %s", purchase.getSkus());
+                    final ArrayList<String> sku = purchase.getSkus();
                     billingClient.acknowledgePurchase(acknowledgePurchaseParams, billingResult -> {
                         Slog.d("IAP", "acknowledged: %s", sku);
-                        settings.setPurchased(purchase.getSku());
+                        settings.setPurchased(purchase.getSkus());
                     });
                 }
             }
