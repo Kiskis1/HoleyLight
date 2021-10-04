@@ -338,88 +338,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         return Manufacturer.isSamsung();
     }
 
-    @SuppressLint("SoonBlockedPrivateApi")
-    private ListPreference getLocalesPreference(PreferenceCategory category) {
-        ArrayList<String> locales = new ArrayList<>();
-
-        AssetManager assetManager = getActivity().getAssets();
-        String[] assetLocales = assetManager.getLocales();
-        for (String s : assetLocales) {
-            String lang = s.replace("-", "_");
-
-            boolean found = BuildConfig.TRANSLATION_ARRAY.length == 0;
-            for (String match : BuildConfig.TRANSLATION_ARRAY) {
-                found = match.replace("-", "_").equals(lang);
-                if (found) break;
-            }
-
-            if (found) locales.add(lang);
-        }
-        locales.sort((lhs, rhs) -> {
-            if ((lhs != null) && (rhs != null)) {
-                String left_lang = lhs;
-                String left_country = null;
-
-                String right_lang = rhs;
-                String right_country = null;
-
-                Locale left_locale;
-                Locale right_locale;
-
-                if (left_lang.contains("_") && !left_lang.endsWith("_")) {
-                    left_country = left_lang.substring(left_lang.indexOf("_") + 1);
-                    left_lang = left_lang.substring(0, left_lang.indexOf("_"));
-                }
-
-                if (right_lang.contains("_") && !right_lang.endsWith("_")) {
-                    right_country = right_lang.substring(right_lang.indexOf("_") + 1);
-                    right_lang = right_lang.substring(0, right_lang.indexOf("_"));
-                }
-
-                if (left_country != null) {
-                    left_locale = new Locale(left_lang, left_country);
-                } else {
-                    left_locale = new Locale(left_lang);
-                }
-
-                if (right_country != null) {
-                    right_locale = new Locale(right_lang, right_country);
-                } else {
-                    right_locale = new Locale(right_lang);
-                }
-
-                if ((left_locale != null) && (right_locale != null)) {
-                    return left_locale.getDisplayName().compareTo(right_locale.getDisplayName());
-                } else {
-                    return 0;
-                }
-            } else {
-                return 0;
-            }
-        });
-
-        CharSequence[] lang_entries = new CharSequence[locales.size() + 1];
-        CharSequence[] lang_values = new CharSequence[locales.size() + 1];
-
-        lang_entries[0] = getString(R.string.settings_customization_locale_default);
-        lang_values[0] = "";
-
-        for (int i = 0; i < locales.size(); i++) {
-            String lang = locales.get(i);
-
-            Locale loc;
-            if (lang.contains("_") && !lang.endsWith("_")) {
-                loc = new Locale(lang.substring(0, lang.indexOf("_")), lang.substring(lang.indexOf("_") + 1));
-            } else {
-                loc = new Locale(lang);
-            }
-
-            lang_entries[i + 1] = loc.getDisplayName();
-            lang_values[i + 1] = lang;
-        }
-
-        return list(category, R.string.settings_customization_locale_title, 0, R.string.settings_customization_locale_title, Settings.LOCALE, "", lang_entries, lang_values, true);
-    }
 
     @SuppressWarnings({"ConstantConditions", "deprecation"})
     private PreferenceScreen createPreferenceHierarchy() {
@@ -755,7 +673,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         });
 
         PreferenceCategory catCustomizations = category(root, R.string.settings_category_customization, 0);
-        prefLocale = getLocalesPreference(catCustomizations);
+        //prefLocale = getLocalesPreference(catCustomizations);
 
         catDebug = category(root, R.string.settings_category_debug, 0);
         catDebug.setVisible(false);
@@ -943,7 +861,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
             if ((key == null) || (key.equals(Settings.LOCALE))) {
                 String lang = settings.getLocale(false);
                 if ("".equals(lang)) {
-                    prefLocale.setSummary(String.format(Locale.ENGLISH, "[ %s ]", getString(R.string.settings_customization_locale_default)));
+                    //prefLocale.setSummary(String.format(Locale.ENGLISH, "[ %s ]", getString(R.string.settings_customization_locale_default)));
                 } else {
                     Locale loc;
                     if (lang.contains("_")) {
